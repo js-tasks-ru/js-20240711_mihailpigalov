@@ -51,7 +51,7 @@ export default class DoubleSlider {
 
       newLeft *= 100;
 
-      let right = parseFloat(rightThumb.style.right);
+      const right = parseFloat(rightThumb.style.right);
 
       if (newLeft + right > 100) {
         newLeft = 100 - right;
@@ -70,7 +70,7 @@ export default class DoubleSlider {
 
       newRight *= 100;
 
-      let left = parseFloat(leftThumb.style.left);
+      const left = parseFloat(leftThumb.style.left);
       if (left + newRight > 100) {
         newRight = 100 - left;
       }
@@ -201,7 +201,13 @@ export default class DoubleSlider {
 
   // Уничтожение слайдера
   destroy() {
+    const { leftThumb, rightThumb } = this.subElements;
+
     this.remove();
-    this.removeEventListeners();
+    this.removeEventListeners();  
+
+    leftThumb.removeEventListener('pointerdown', (event) => { this.onPointerDown(event); });
+    rightThumb.removeEventListener('pointerdown', (event) => { this.onPointerDown(event); });
   }
+
 }

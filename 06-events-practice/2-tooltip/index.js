@@ -31,7 +31,7 @@ class Tooltip {
       this.removeTooltip();
       document.body.removeEventListener('pointermove', (event) => this.moveTooltip(event));
     }
-  }
+  } 
 
   moveTooltip(event) {
     const shift = 10;
@@ -54,7 +54,6 @@ class Tooltip {
   removeTooltip() {
     if (this.element) {
       this.element.remove();
-      this.element = null;
     }
   }
 
