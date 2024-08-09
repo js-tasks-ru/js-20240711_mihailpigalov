@@ -95,7 +95,7 @@ export default class DoubleSlider {
     });
 
     this.element.dispatchEvent(thumbUpEvent); // Отправляем событие с новыми значениями
-    this.removeEventListeners(); // Удаляем слушатели событий
+    this.removeFirstEventListeners(); // Удаляем слушатели событий
   }
 
   // Этот метод вычисляет текущие значения ползунков
@@ -169,9 +169,16 @@ export default class DoubleSlider {
   }
 
   // Удаление слушателей событий
-  removeEventListeners() {
+  removeFirstEventListeners() {
     document.removeEventListener('pointerup', this.onPointerUp);
     document.removeEventListener('pointermove', this.onPointerMove);
+  }
+
+  removeSecondEventListeners(){
+    const { leftThumb, rightThumb } = this.subElements;
+
+    leftThumb.removeEventListener('pointerdown', this.onPointerDown);
+    rightThumb.removeEventListener('pointerdown', this.onPointerDown);
   }
 
   // Рендеринг слайдера
@@ -201,13 +208,9 @@ export default class DoubleSlider {
 
   // Уничтожение слайдера
   destroy() {
-    const { leftThumb, rightThumb } = this.subElements;
-
     this.remove();
-    this.removeEventListeners();  
-
-    leftThumb.removeEventListener('pointerdown', (event) => { this.onPointerDown(event); });
-    rightThumb.removeEventListener('pointerdown', (event) => { this.onPointerDown(event); });
+    this.removeFirstEventListeners();  
+    this.removeSecondEventListeners();  
   }
 
 }
