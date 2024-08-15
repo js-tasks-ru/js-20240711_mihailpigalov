@@ -14,6 +14,7 @@ export default class SortableTable {
     );
 
     this.insertArrow(selectedHeader);
+    this.sort(selectedHeader.dataset.id, selectedHeader.dataset.order);
     this.initEventListeners();
   }
 
@@ -22,51 +23,41 @@ export default class SortableTable {
 
     Array.from(headerElements).forEach((headerElement) => {
       headerElement.addEventListener("pointerdown", () =>
-        this.handleHeaderClick(headerElement)
+        this.handleHeaderPointerDown(headerElement)
       );
     });
+  }
+
+  removeEventListeners() {
+    const headerElements = this.subElements.header.children;
+
+    Array.from(headerElements).forEach((headerElement) => {
+      headerElement.removeEventListener("pointerdown", () =>
+        this.handleHeaderPointerDown(headerElement)
+      );
+    });
+  }
+
+  handleHeaderPointerDown(headerElement) {
+    this.handleHeaderClick(headerElement);
   }
 
   handleHeaderClick(headerElement) {
     const currentOrder = headerElement.dataset.order;
     const newOrder = currentOrder === "asc" ? "desc" : "asc";
 
-    // console.log(currentOrder);
-    // console.log(newOrder);
-
-    // Проверяем, есть ли уже стрелочка на текущем заголовке
     const arrowElement = headerElement.querySelector('[data-element="arrow"]');
 
-    if (arrowElement) {
-      // Если стрелочка уже есть, просто меняем порядок сортировки
-      headerElement.dataset.order = newOrder;
-    } else {
-      // Если стрелочка не на текущем заголовке, удаляем её у всех заголовков
-      const allHeaders = this.subElements.header.children;
-      Array.from(allHeaders).forEach((header) => {
-        header.dataset.order = "";
-        const existingArrow = header.querySelector('[data-element="arrow"]');
-        if (existingArrow) {
-          existingArrow.remove();
-        }
-      });
+    if (!arrowElement) this.insertArrow(headerElement);
 
-      // Устанавливаем новый порядок сортировки и добавляем стрелочку
-      headerElement.dataset.order = newOrder;
-      this.insertArrow(headerElement);
-      return;
-    }
+    headerElement.dataset.order = newOrder;
 
-    // Вызываем сортировку данных
     this.sort(headerElement.dataset.id, newOrder);
   }
 
   insertArrow(headerElement) {
     if (headerElement) {
-      const spanElement = headerElement.querySelector("span");
-      spanElement.insertAdjacentElement("afterend", this.arrowElement);
-
-      this.sort(headerElement.dataset.id, headerElement.dataset.order);
+      headerElement.appendChild(this.arrowElement);
     }
   }
 
@@ -147,6 +138,7 @@ export default class SortableTable {
   }
 
   remove() {
+    this.removeEventListeners();
     this.element.remove();
   }
 
