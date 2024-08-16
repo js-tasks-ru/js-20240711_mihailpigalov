@@ -19,27 +19,24 @@ export default class SortableTable {
   }
 
   initEventListeners() {
-    const headerElements = this.subElements.header.children;
-
-    Array.from(headerElements).forEach((headerElement) => {
-      headerElement.addEventListener("pointerdown", () =>
-        this.handleHeaderPointerDown(headerElement)
-      );
-    });
+    this.subElements.header.addEventListener(
+      "pointerdown",
+      this.handleHeaderPointerDown.bind(this)
+    );
   }
 
   removeEventListeners() {
-    const headerElements = this.subElements.header.children;
-
-    Array.from(headerElements).forEach((headerElement) => {
-      headerElement.removeEventListener("pointerdown", () =>
-        this.handleHeaderPointerDown(headerElement)
-      );
-    });
+    this.subElements.header.removeEventListener(
+      "pointerdown",
+      this.handleHeaderPointerDown.bind(this)
+    );
   }
 
-  handleHeaderPointerDown(headerElement) {
-    this.handleHeaderClick(headerElement);
+  handleHeaderPointerDown(event) {
+    const headerElement = event.target.closest('.sortable-table__cell[data-sortable="true"]');
+    if (headerElement) {
+      this.handleHeaderClick(headerElement);
+    }
   }
 
   handleHeaderClick(headerElement) {
