@@ -13,6 +13,8 @@ export default class SortableTable {
       (element) => element.dataset.id === `${this.sorted.id}`
     );
 
+    this.headerPointerDownHandle = this.handleHeaderPointerDown.bind(this);
+
     this.insertArrow(selectedHeader);
     this.sort(selectedHeader.dataset.id, selectedHeader.dataset.order);
     this.initEventListeners();
@@ -21,14 +23,14 @@ export default class SortableTable {
   initEventListeners() {
     this.subElements.header.addEventListener(
       "pointerdown",
-      this.handleHeaderPointerDown.bind(this)
+      this.headerPointerDownHandle
     );
   }
 
   removeEventListeners() {
     this.subElements.header.removeEventListener(
       "pointerdown",
-      this.handleHeaderPointerDown.bind(this)
+      this.headerPointerDownHandle
     );
   }
 
